@@ -109,7 +109,7 @@ object EmbeddedCassandra {
     Map("seeds"               -> host,
       "storage_port"          -> getStoragePort(index).toString,
       "ssl_storage_port"      -> getSslStoragePort(index).toString,
-      "native_transport_port" -> getNativePort(index).toString,
+      "native_transport_port" -> getPort(index).toString,
       "rpc_address"           -> host,
       "rpc_port"              -> getRpcPort(index).toString,
       "listen_address"        -> host,
@@ -124,7 +124,7 @@ object EmbeddedCassandra {
     case host: InetAddress => host
     case _ => throw new RuntimeException("Wrong data type, it should be InetAddress")
   }
-  def getNativePort(index: Integer) = getNodeProperty(index, NativePortProperty) match {
+  def getPort(index: Integer) = getNodeProperty(index, NativePortProperty) match {
     case port: Int => port
     case _ => throw new RuntimeException("Wrong data type, it should be Int")
   }

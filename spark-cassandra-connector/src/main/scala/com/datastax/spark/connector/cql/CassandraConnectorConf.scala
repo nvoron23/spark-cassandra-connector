@@ -12,8 +12,7 @@ import com.datastax.spark.connector.util.ConfigCheck
   * Provides information about cluster nodes, ports and optional credentials for authentication. */
 case class CassandraConnectorConf(
   hosts: Set[InetAddress],
-  nativePort: Int = CassandraConnectorConf.DefaultNativePort,
-  rpcPort: Int = CassandraConnectorConf.DefaultRpcPort,
+  port: Int = CassandraConnectorConf.DefaultPort,
   authConf: AuthConf = NoAuthConf,
   localDC: Option[String] = None,
   keepAliveMillis: Int = CassandraConnectorConf.DefaultKeepAliveMillis,
@@ -31,9 +30,7 @@ case class CassandraConnectorConf(
   * which require establishing connections to a Cassandra cluster.*/
 object CassandraConnectorConf extends Logging {
 
-  val DefaultRpcPort = 9160
-  val DefaultNativePort = 9042
-
+  val DefaultPort = 9042
   val DefaultKeepAliveMillis = 250
   val DefaultMinReconnectionDelayMillis = 1000
   val DefaultMaxReconnectionDelayMillis = 60000
@@ -42,8 +39,7 @@ object CassandraConnectorConf extends Logging {
   val DefaultReadTimeoutMillis = 12000
 
   val CassandraConnectionHostProperty = "spark.cassandra.connection.host"
-  val CassandraConnectionRpcPortProperty = "spark.cassandra.connection.rpc.port"
-  val CassandraConnectionNativePortProperty = "spark.cassandra.connection.native.port"
+  val CassandraConnectionPortProperty = "spark.cassandra.connection.port"
 
   val CassandraConnectionLocalDCProperty = "spark.cassandra.connection.local_dc"
   val CassandraConnectionTimeoutProperty = "spark.cassandra.connection.timeout_ms"
@@ -56,8 +52,7 @@ object CassandraConnectorConf extends Logging {
   //Whitelist for allowed CassandraConnector environment variables
   val Properties = Set(
     CassandraConnectionHostProperty,
-    CassandraConnectionRpcPortProperty,
-    CassandraConnectionNativePortProperty,
+    CassandraConnectionPortProperty,
     CassandraConnectionLocalDCProperty,
     CassandraConnectionTimeoutProperty,
     CassandraConnectionKeepAliveProperty,
@@ -83,9 +78,8 @@ object CassandraConnectorConf extends Logging {
       hostName <- hostsStr.split(",").toSet[String]
       hostAddress <- resolveHost(hostName)
     } yield hostAddress
-
-    val rpcPort = conf.getInt(CassandraConnectionRpcPortProperty, DefaultRpcPort)
-    val nativePort = conf.getInt(CassandraConnectionNativePortProperty, DefaultNativePort)
+    
+    val port = conf.getInt(CassandraConnectionPortProperty, DefaultPort)
     val authConf = AuthConf.fromSparkConf(conf)
     val keepAlive = conf.getInt(CassandraConnectionKeepAliveProperty, DefaultKeepAliveMillis)
     
@@ -100,8 +94,7 @@ object CassandraConnectorConf extends Logging {
 
     CassandraConnectorConf(
       hosts = hosts,
-      nativePort = nativePort,
-      rpcPort = rpcPort,
+      port = port,
       authConf = authConf,
       localDC = localDC,
       keepAliveMillis = keepAlive,
