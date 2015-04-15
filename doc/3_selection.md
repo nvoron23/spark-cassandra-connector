@@ -76,7 +76,7 @@ partition which is created for the RDD.
 
 ### Grouping rows by partition key
 
-Physically, cassandra stores data already grouped by Cassandra partition key and ordered by clustering
+Physically, Cassandra stores data already grouped by Cassandra partition key and ordered by clustering
 column(s) within each partition. As a single Cassandra partition never spans multiple Spark partitions,
 it is possible to very efficiently group data by partition key without shuffling data around.
 Call `spanBy` or `spanByKey` methods instead of `groupBy` or `groupByKey`:
